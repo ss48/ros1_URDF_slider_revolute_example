@@ -1,0 +1,30 @@
+<launch>
+  <!-- Load the robot description -->
+  <param name="robot_description" command="cat $(find urdf_example)/urdf/example_robot.urdf" />
+
+  <!-- Use simulation time -->
+  <param name="use_sim_time" value="true" />
+
+  <!-- Start the robot_state_publisher node -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="screen" />
+
+  <!-- Launch Gazebo -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="paused" value="false" />
+    <arg name="use_sim_time" value="true" />
+    <arg name="gui" value="true" />
+    <arg name="headless" value="false" />
+    <arg name="verbose" value="true" />
+  </include>
+
+  <!-- Start the joint_state_publisher node -->
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" output="screen" />
+
+  <!-- Spawn the robot in Gazebo -->
+  <node name="spawn_entity" pkg="gazebo_ros" type="spawn_model" output="screen"
+        args="-param robot_description -entity my_bot" />
+
+  <!-- Optionally, launch RViz -->
+  <node name="rviz" pkg="rviz" type="rviz" />
+</launch>
+
